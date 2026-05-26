@@ -1,8 +1,10 @@
 package com.avaneesh.bfhl_java_assignment;
 
 import com.avaneesh.bfhl_java_assignment.dto.BfhlRequest;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -24,8 +26,9 @@ public class BfhlControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // TEST CASE 1
     @Test
-    public void testBfhlApi() throws Exception {
+    public void testMixedData() throws Exception {
 
         BfhlRequest request =
                 new BfhlRequest(
@@ -36,6 +39,51 @@ public class BfhlControllerTest {
                                 "4",
                                 "R",
                                 "$"
+                        )
+                );
+
+        mockMvc.perform(
+                        post("/bfhl")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                )
+                )
+                .andExpect(status().isOk());
+    }
+    @Test
+    public void testOnlyAlphabets() throws Exception {
+
+        BfhlRequest request =
+                new BfhlRequest(
+                        Arrays.asList(
+                                "A",
+                                "ABCD",
+                                "DOE"
+                        )
+                );
+
+        mockMvc.perform(
+                        post("/bfhl")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                )
+                )
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testNumbersAndSpecialCharacters() throws Exception {
+
+        BfhlRequest request =
+                new BfhlRequest(
+                        Arrays.asList(
+                                "1",
+                                "2",
+                                "3",
+                                "$",
+                                "@"
                         )
                 );
 
