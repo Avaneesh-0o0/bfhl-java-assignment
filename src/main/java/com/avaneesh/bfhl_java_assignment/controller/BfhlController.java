@@ -20,4 +20,8 @@ public class BfhlController {
 
         return bfhlService.processData(request);
     }
+    @GetMapping("/health")
+    public String healthCheck() {
+        return "OK";
+    }
 }
